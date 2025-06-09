@@ -5,7 +5,6 @@
 //  Created by Martin Lanius on 07.06.25.
 //
 
-
 import SwiftUI
 import PhotosUI
 import UniformTypeIdentifiers
