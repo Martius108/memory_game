@@ -40,6 +40,7 @@ struct ContentView: View {
                     Image("Icon")
                         .resizable()
                         .frame(width: 100, height: 100)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                     Text("Please choose some images for your Memory Game")
                         .frame(maxWidth: .infinity)
                         .multilineTextAlignment(.center)
@@ -49,9 +50,11 @@ struct ContentView: View {
                 Button("Choose Image") {
                     showImagePicker = true
                 }
-                .padding(.top, 50)
+                .font(.system(size: 22))
+                .padding(.top, 30)
                 Spacer()
-                if croppedImages.count >= 2 {
+                let minimumImages = horizontalSizeClass == .compact ? 4 : 10
+                if croppedImages.count >= minimumImages {
                     Button("Start Game") {
                         gameStarted = true
                     }
@@ -91,6 +94,7 @@ struct ContentView: View {
                         croppedImages.removeAll()
                         savedImagesData = Data()
                     }
+                    .font(.system(size: 19))
                     .padding(.top, 4)
                     .padding(.bottom, 6)
                     .foregroundColor(.red)

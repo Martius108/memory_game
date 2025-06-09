@@ -38,8 +38,19 @@ struct GameView: View {
 
     init(images: [UIImage]) {
         let limit = UIDevice.current.userInterfaceIdiom == .pad ? 12 : 4
-        let uniqueImages = Array(Set(images.map { $0.pngData() ?? Data() })).prefix(limit).compactMap { data in
-            UIImage(data: data)
+        let shuffled = images.shuffled()
+        var seenHashes = Set<Int>()
+        var uniqueImages: [UIImage] = []
+        for img in shuffled {
+            if let data = img.pngData() {
+                let hash = data.hashValue
+                if seenHashes.insert(hash).inserted {
+                    uniqueImages.append(img)
+                }
+            }
+            if uniqueImages.count == limit {
+                break
+            }
         }
         let selected = Array(uniqueImages)
         let paired = selected + selected
@@ -77,7 +88,12 @@ struct GameView: View {
             }
         }
         .onAppear {
+            AppDelegate.orientationLock = .portrait
+            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
             startTime = Date()
+        }
+        .onDisappear {
+            AppDelegate.orientationLock = .all // oder spezifisch wie zuvor erlaubt
         }
         .navigationTitle("Memory Game")
         .navigationBarTitleDisplayMode(.inline)
